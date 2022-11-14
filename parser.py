@@ -93,7 +93,7 @@ def process_param_line(params, input_time):
             print_result(input_hours, input_minutes, True, config_task)
         # run_me_sixty_times
         elif (config_minutes == WILDCARD) and (config_hours != WILDCARD):
-            fixed_hours_task(config_hours, input_hours, config_task)
+            fixed_hours_task(config_hours, input_hours, input_minutes, config_task)
         # run_me_hourly
         elif (config_minutes != WILDCARD) and (config_hours == WILDCARD):
             fixed_minutes_task(config_minutes, input_hours, input_minutes, config_task)
@@ -105,9 +105,11 @@ def process_param_line(params, input_time):
         quit()
 
 
-def fixed_hours_task(config_hours, input_hours, config_task):
+def fixed_hours_task(config_hours, input_hours, input_minutes, config_task):
     if int(config_hours) > int(input_hours):
         print_result(config_hours, ZEROES, True, config_task)
+    elif int(config_hours) == int(input_hours):
+        print_result(config_hours, input_minutes, True, config_task)
     else:
         print_result(config_hours, ZEROES, False, config_task)
 
@@ -124,16 +126,18 @@ def fixed_minutes_task(config_minutes, input_hours, input_minutes, config_task):
 
 
 def fixed_hours_and_minuts_task(config_hours, config_minutes, input_hours, input_minutes, config_task):
-    if int(config_hours) < int(input_hours):
+    if int(input_hours) > int(config_hours):
         print_result(config_hours, config_minutes, False, config_task)
     else:
-        if int(config_minutes) < int(input_minutes):
+        if int(input_hours) == int(config_hours) and int(input_minutes) > int(config_minutes):
             print_result(config_hours, config_minutes, False, config_task)
         else:
             print_result(config_hours, config_minutes, True, config_task)
 
 
 def print_result(hours, minutes, is_today, task_name):
+    if len(minutes) == 1:
+        minutes = "0" + minutes
     if is_today:
         print(hours + ":" + minutes + " today - " + task_name)
     else:
